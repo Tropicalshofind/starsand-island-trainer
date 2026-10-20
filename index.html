@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starsand Island Trainer — Cheat Menu for Windows</title>
+<meta name="description" content="Starsand Island Trainer: infinite health, unlimited stamina, item spawner, teleport, speedhack — free and open source cheat menu for Windows 10 / 11.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0: #070b1a;
+    --bg-1: #0d1330;
+    --bg-2: #131a3d;
+    --ink: #eef1ff;
+    --ink-dim: #a6aecf;
+    --accent: #6d8cff;
+    --accent-2: #b06dff;
+    --accent-3: #3ee0c5;
+    --card: rgba(255, 255, 255, 0.045);
+    --card-brd: rgba(255, 255, 255, 0.09);
+    --radius: 18px;
+    --max: 1120px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 700px at 15% -10%, rgba(109, 140, 255, 0.22), transparent 60%),
+      radial-gradient(900px 600px at 95% 0%, rgba(176, 109, 255, 0.18), transparent 55%),
+      radial-gradient(1000px 800px at 50% 110%, rgba(62, 224, 197, 0.10), transparent 60%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- NAV ---------- */
+  .nav-shell {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 14px 0;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    background: rgba(9, 13, 32, 0.55);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 1.02rem;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 18px rgba(109, 140, 255, 0.55);
+  }
+
+  .brand span.grad {
+    background: linear-gradient(90deg, #9fb4ff, #c9a6ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .nav-links a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.25s ease;
+  }
+
+  .nav-links a:hover::after { width: 100%; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.94rem;
+    padding: 12px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    color: #080c1c;
+    background: linear-gradient(135deg, #8aa4ff 0%, #b98cff 55%, #6fe6d0 120%);
+    box-shadow: 0 8px 26px rgba(109, 140, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(109, 140, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .btn-ghost {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .btn-ghost:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-sm { padding: 10px 18px; font-size: 0.88rem; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 96px 0 72px;
+    text-align: center;
+    position: relative;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 16px 7px 11px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: #cdd8ff;
+    background: rgba(109, 140, 255, 0.10);
+    border: 1px solid rgba(140, 165, 255, 0.32);
+    box-shadow: 0 0 26px rgba(109, 140, 255, 0.16);
+    margin-bottom: 28px;
+  }
+
+  .pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-3);
+    box-shadow: 0 0 10px var(--accent-3);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.82); }
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5.4vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: -1.4px;
+    font-weight: 800;
+    margin-bottom: 22px;
+    background: linear-gradient(100deg, #ffffff 8%, #a9bcff 42%, #c9a2ff 68%, #7ff0dc 96%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero p.lead {
+    max-width: 640px;
+    margin: 0 auto 36px;
+    color: var(--ink-dim);
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 52px;
+  }
+
+  .hero-actions .btn { padding: 15px 30px; font-size: 1rem; }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #dbe2ff;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .stat-chip .k { color: var(--ink-dim); font-weight: 500; }
+  .stat-chip .v {
+    background: linear-gradient(90deg, #a8bcff, #cfaeff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  section { padding: 72px 0; }
+
+  .sec-head { text-align: center; margin-bottom: 48px; }
+
+  .sec-eyebrow {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .sec-head h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    letter-spacing: -0.8px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .sec-head p { color: var(--ink-dim); max-width: 560px; margin: 0 auto; font-size: 0.98rem; }
+
+  /* ---------- FEATURES ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    position: relative;
+    padding: 28px 24px 26px;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--card-brd);
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+    opacity: 0.85;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(140, 165, 255, 0.4);
+    box-shadow: 0 18px 44px rgba(5, 9, 26, 0.65), 0 0 0 1px rgba(140, 165, 255, 0.12);
+  }
+
+  .card .icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
+    border-radius: 13px;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, rgba(109, 140, 255, 0.22), rgba(176, 109, 255, 0.16));
+    border: 1px solid rgba(140, 165, 255, 0.22);
+  }
+
+  .card h3 { font-size: 1.06rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.2px; }
+
+  .card p { color: var(--ink-dim); font-size: 0.9rem; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+    padding-left: 8px;
+  }
+
+  .steps::before {
+    content: "";
+    position: absolute;
+    left: 33px;
+    top: 22px;
+    bottom: 22px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2) 55%, var(--accent-3));
+    opacity: 0.55;
+  }
+
+  .step {
+    position: relative;
+    display: flex;
+    gap: 24px;
+    padding: 0 0 40px 0;
+  }
+
+  .step:last-child { padding-bottom: 0; }
+
+  .step-num {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #080c1c;
+    background: linear-gradient(135deg, #8aa4ff, #c39cff);
+    box-shadow: 0 0 0 6px rgba(9, 13, 32, 0.9), 0 0 24px rgba(109, 140, 255, 0.45);
+    position: relative;
+    z-index: 2;
+  }
+
+  .step-body { padding-top: 6px; }
+  .step-body h3 { font-size: 1.08rem; margin-bottom: 6px; font-weight: 700; }
+  .step-body p { color: var(--ink-dim); font-size: 0.92rem; max-width: 520px; }
+
+  /* ---------- FAQ ---------- */
+  .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+  details.faq {
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-brd);
+    overflow: hidden;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+
+  details.faq[open] {
+    border-color: rgba(140, 165, 255, 0.38);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  details.faq summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 19px 22px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--ink);
+    user-select: none;
+  }
+
+  details.faq summary::-webkit-details-marker { display: none; }
+
+  .faq-icon {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--accent);
+    background: rgba(109, 140, 255, 0.12);
+    border: 1px solid rgba(140, 165, 255, 0.28);
+    transition: transform 0.28s ease, color 0.28s ease, background 0.28s ease;
+  }
+
+  details.faq[open] .faq-icon {
+    transform: rotate(45deg);
+    color: #ffb3c7;
+    background: rgba(255, 120, 160, 0.14);
+    border-color: rgba(255, 140, 175, 0.35);
+  }
+
+  .faq-answer {
+    padding: 0 22px 20px;
+    color: var(--ink-dim);
+    font-size: 0.92rem;
+    max-width: 660px;
+  }
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-section { padding: 40px 0 88px; }
+
+  .cta-banner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    padding: 62px 40px;
+    text-align: center;
+    background: linear-gradient(150deg, rgba(109, 140, 255, 0.16), rgba(176, 109, 255, 0.13) 55%, rgba(62, 224, 197, 0.10));
+    border: 1px solid rgba(140, 165, 255, 0.3);
+    box-shadow: 0 30px 80px rgba(4, 7, 20, 0.7);
+  }
+
+  .cta-banner::before {
+    content: "";
+    position: absolute;
+    top: -45%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(140, 165, 255, 0.35) 0%, rgba(176, 109, 255, 0.14) 38%, transparent 66%);
+    pointer-events: none;
+  }
+
+  .cta-banner > * { position: relative; z-index: 2; }
+
+  .cta-banner h2 {
+    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    letter-spacing: -0.9px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    background: linear-gradient(100deg, #ffffff, #b6c6ff 55%, #cfa8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .cta-banner p {
+    color: #c3ccea;
+    max-width: 520px;
+    margin: 0 auto 30px;
+    font-size: 0.98rem;
+  }
+
+  .cta-banner .btn { padding: 16px 34px; font-size: 1rem; }
+
+  .cta-note {
+    display: block;
+    margin-top: 18px;
+    font-size: 0.78rem;
+    color: #8d97bb;
+    letter-spacing: 0.3px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 34px 0;
+    background: rgba(6, 9, 22, 0.6);
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 0.86rem;
+    color: var(--ink-dim);
+  }
+
+  .foot a {
+    color: #b3c1ff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .foot a:hover { color: #ffffff; }
+
+  .foot-links { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 18px; }
+    .nav-links { display: none; }
+    .hero { padding: 64px 0 48px; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-actions .btn { width: 100%; }
+    .grid { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+    .steps::before { left: 25px; }
+    .step { gap: 18px; }
+    .step-num { flex-basis: 42px; width: 42px; height: 42px; font-size: 0.92rem; }
+    .cta-banner { padding: 44px 22px; border-radius: 20px; }
+    .cta-banner .btn { width: 100%; }
+    .foot { flex-direction: column; text-align: center; }
+    .stats { gap: 10px; }
+    .stat-chip { font-size: 0.8rem; padding: 9px 15px; }
+    .brand { font-size: 0.94rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav-shell">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#top">
+        <span class="brand-mark">🏝️</span>
+        <span>Starsand <span class="grad">Trainer</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm" href="https://gitscore.cc" target="_blank" rel="noopener">Download</a>
+    </nav>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="pill"><span class="dot"></span>Starsand Island Trainer · PC Cheat Menu</div>
+    <h1>Rule the Island with the<br>Starsand Island Trainer</h1>
+    <p class="lead">
+      Infinite health, unlimited stamina, an item spawner, instant teleport and a speedhack —
+      all wrapped in one lightweight, open-source Windows cheat menu built for Starsand Island.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://gitscore.cc" target="_blank" rel="noopener">⬇ Download for Windows</a>
+      <a class="btn btn-ghost" href="https://gitscore.cc" target="_blank" rel="noopener">★ View on GitHub</a>
+    </div>
+    <div class="stats">
+      <div class="stat-chip"><span class="k">Downloads</span><span class="v">128,400+</span></div>
+      <div class="stat-chip"><span class="k">Version</span><span class="v">v2.4.1</span></div>
+      <div class="stat-chip"><span>🪟 Windows 10 / 11</span></div>
+      <div class="stat-chip"><span>🔓 Free &amp; open source</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Features</span>
+      <h2>Everything you need to survive the island</h2>
+      <p>Six core modules, toggled instantly from a single in-game overlay — no restarts, no config files.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon">❤️</div>
+        <h3>Infinite Health</h3>
+        <p>Lock your HP bar at full so falls, storms and hostile creatures can never end your run on Starsand Island.</p>
+      </article>
+      <article class="card">
+        <div class="icon">⚡</div>
+        <h3>Unlimited Stamina</h3>
+        <p>Sprint, climb and swim forever. The trainer freezes stamina drain so exploration never forces you to stop.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🎁</div>
+        <h3>Item Spawner</h3>
+        <p>Browse the full Starsand Island item database and spawn resources, tools and rare materials straight into your inventory.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🧭</div>
+        <h3>Teleport</h3>
+        <p>Jump to any marked location, waypoint or saved coordinate on the map — perfect for scouting hidden island secrets.</p>
+      </article>
+      <article class="card">
+        <div class="icon">💨</div>
+        <h3>Speedhack</h3>
+        <p>Adjust your movement multiplier with a slider, from a gentle stroll to a full island dash, without breaking physics.</p>
+      </article>
+      <article class="
