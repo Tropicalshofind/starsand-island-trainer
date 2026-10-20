@@ -1,0 +1,19 @@
+process_name: StarsandIsland.exe
+game_build: "2026.03"
+
+stamina:
+  enabled: true
+  value: 100
+
+inventory:
+  unlimited_stacks: false
+  slot_count: 24
+  stack_size: 999
+
+time_of_day:
+  freeze_at: null  # e.g. 43200 for noon
+
+player_stats:
+  health: null
+  hunger: null
+  thirst: null
